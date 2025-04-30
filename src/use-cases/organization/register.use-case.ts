@@ -1,5 +1,6 @@
 import { OrganizationsRepository } from '@/repositories/organizations.repository';
 import { hash } from 'bcryptjs';
+import { EmailAlreadyTakenError } from '../errors/email-already-taken.error';
 
 interface RegisterUseCaseInput {
   name: string;
@@ -23,22 +24,25 @@ export class RegisterUseCase {
     phone,
     password,
   }: RegisterUseCaseInput) {
-    try {
-      const passwordHash = await hash(password, 6);
+    const passwordHash = await hash(password, 6);
 
-      const organization = await this.organizationsRepository.create({
-        name,
-        owner,
-        email,
-        zipCode,
-        address,
-        phone,
-        passwordHash,
-      });
+    const organizationWithSameEmail =
+      await this.organizationsRepository.getByEmail(email);
 
-      return organization;
-    } catch (error) {
-      throw error;
+    if (organizationWithSameEmail) {
+      throw new EmailAlreadyTakenError();
     }
+
+    const organization = await this.organizationsRepository.create({
+      name,
+      owner,
+      email,
+      zipCode,
+      address,
+      phone,
+      passwordHash,
+    });
+
+    return organization;
   }
 }

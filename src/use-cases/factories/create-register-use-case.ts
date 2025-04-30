@@ -1,6 +1,6 @@
 import { Organization, Prisma } from 'generated/prisma';
-import { RegisterUseCase } from '../organization/register';
-import { PrismaOrganizationsRepository } from '@/repositories/prismaOrganizations.repository';
+import { RegisterUseCase } from '../organization/register.use-case';
+import { PrismaOrganizationsRepository } from '@/repositories/prisma-organizations.repository';
 
 export function createRegisterUseCase() {
   const organizationRepository = new PrismaOrganizationsRepository();
