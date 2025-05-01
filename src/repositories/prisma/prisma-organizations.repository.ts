@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Organization, Prisma } from 'generated/prisma';
-import { OrganizationsRepository } from './organizations.repository';
+import { OrganizationsRepository } from '../organizations.repository';
 
 export class PrismaOrganizationsRepository implements OrganizationsRepository {
   async getByEmail(email: string): Promise<Organization | null> {
@@ -15,6 +15,13 @@ export class PrismaOrganizationsRepository implements OrganizationsRepository {
       data,
     });
 
+    return organization;
+  }
+
+  async getById(id: string): Promise<Organization | null> {
+    const organization = await prisma.organization.findUnique({
+      where: { id },
+    });
     return organization;
   }
 }
