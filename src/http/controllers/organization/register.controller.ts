@@ -1,3 +1,4 @@
+import { EmailAlreadyTakenError } from '@/use-cases/errors/email-already-taken.error';
 import { createRegisterUseCase } from '@/use-cases/factories/create-register-use-case';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
@@ -23,6 +24,9 @@ export async function registerController(
     const organization = await registerUseCase.execute(data);
     reply.status(201).send({ ...organization, passwordHash: undefined });
   } catch (error) {
+    if (error instanceof EmailAlreadyTakenError) {
+      return reply.status(409).send({ message: error.message });
+    }
     throw error;
   }
 }

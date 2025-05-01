@@ -27,7 +27,12 @@ describe('Authenticate Use Case', () => {
       email: 'johndoe@example.com',
       password: '123456',
     });
-    await expect(result).resolves.toBe(null);
+    await expect(result).resolves.toEqual(
+      expect.objectContaining({
+        email: 'johndoe@example.com',
+        passwordHash: expect.any(String),
+      }),
+    );
   });
 
   it("should not authenticate a user if email doesn't exist", async () => {

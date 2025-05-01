@@ -1,6 +1,7 @@
 import { OrganizationsRepository } from '@/repositories/organizations.repository';
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error';
 import { compare } from 'bcryptjs';
+import { Organization } from 'generated/prisma';
 
 interface AuthenticateUseCaseInput {
   email: string;
@@ -10,7 +11,10 @@ interface AuthenticateUseCaseInput {
 export class AuthenticateUseCase {
   constructor(private organizationsRepository: OrganizationsRepository) {}
 
-  async execute({ email, password }: AuthenticateUseCaseInput) {
+  async execute({
+    email,
+    password,
+  }: AuthenticateUseCaseInput): Promise<Organization> {
     const organizationWithEmail =
       await this.organizationsRepository.getByEmail(email);
 
@@ -26,6 +30,6 @@ export class AuthenticateUseCase {
       throw new InvalidCredentialsError();
     }
 
-    return Promise.resolve(null);
+    return organizationWithEmail;
   }
 }
