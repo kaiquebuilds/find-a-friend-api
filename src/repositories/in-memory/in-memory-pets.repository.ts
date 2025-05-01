@@ -3,7 +3,7 @@ import { PetsRepository } from '../pets.repository';
 import { randomUUID } from 'node:crypto';
 
 export class InMemoryPetsRepository implements PetsRepository {
-  private readonly pets: Partial<Pet>[] = [];
+  private readonly pets: Pet[] = [];
 
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
     const pet: Pet = {
@@ -22,6 +22,15 @@ export class InMemoryPetsRepository implements PetsRepository {
       pictureUrls: data.pictureUrls as string[],
     };
     this.pets.push(pet);
+
+    return Promise.resolve(pet);
+  }
+
+  getById(id: string): Promise<Pet | null> {
+    const pet = this.pets.find((p) => p.id === id);
+    if (!pet) {
+      return Promise.resolve(null);
+    }
 
     return Promise.resolve(pet);
   }
