@@ -12,4 +12,24 @@ export class PrismaPetsRepository implements PetsRepository {
     const pet = await prisma.pet.findUnique({ where: { id } });
     return pet;
   }
+
+  getAllByCity(city: string, query?: string): Promise<Pet[]> {
+    return prisma.pet.findMany({
+      where: {
+        city,
+        OR: [
+          {
+            name: {
+              contains: query,
+            },
+          },
+          {
+            about: {
+              contains: query,
+            },
+          },
+        ],
+      },
+    });
+  }
 }

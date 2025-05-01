@@ -34,4 +34,30 @@ export class InMemoryPetsRepository implements PetsRepository {
 
     return Promise.resolve(pet);
   }
+
+  getAllByCity(city: string, q?: string): Promise<Pet[]> {
+    const pets = this.pets.filter((pet) => {
+      if (pet.city !== city) {
+        return false;
+      }
+
+      if (q) {
+        if (
+          pet.about?.includes(q) ||
+          pet.name.includes(q) ||
+          pet.adoptionRequirements.includes(q) ||
+          pet.age.includes(q) ||
+          pet.size.includes(q) ||
+          pet.energyLevel.includes(q) ||
+          pet.independenceLevel.includes(q) ||
+          pet.requiredSpace.includes(q)
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+    return Promise.resolve(pets);
+  }
 }
