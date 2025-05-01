@@ -2,17 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { AuthenticateUseCase } from './authenticate.use-case';
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error';
 import { InMemoryOrganizationsRepository } from '@/repositories/in-memory/in-memory-organizations.repository';
+import { hash } from 'bcryptjs';
 
 let organizationsRepository = new InMemoryOrganizationsRepository();
 
 describe('Authenticate Use Case', () => {
   it('should authenticate a user', async () => {
+    // TODO: This test knows I'm using bcrypt under the hood. The dependency should be removed
+
     await organizationsRepository.create({
       address: 'sample address',
       email: 'johndoe@example.com',
       name: 'JS Organization',
       owner: 'John Doe',
-      passwordHash: 'hashed-password',
+      passwordHash: await hash('123456', 6),
       phone: '(99) 9 9999-9999',
       zipCode: '55555-555',
     });
