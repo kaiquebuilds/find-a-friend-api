@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { RetrievePetUseCase } from './retireve-pet.use-case';
+import { RetrievePetUseCase } from './retrieve-pet.use-case';
 import { ResourceNotFoundError } from '../errors/resource-not-found.error';
 import { PetsRepository } from '@/repositories/pets.repository';
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets.repository';
