@@ -54,9 +54,11 @@ export class InMemoryPetsRepository implements PetsRepository {
         ) {
           return true;
         }
+
+        return false;
       }
 
-      return false;
+      return true;
     });
     return Promise.resolve(pets);
   }
