@@ -3,11 +3,20 @@ import { ZodError } from 'zod';
 import { appRoutes } from './http/routes';
 import { env } from './env';
 import fastifyJwt from '@fastify/jwt';
+import fastifyCookie from '@fastify/cookie';
 
 const app = fastify();
 
+app.register(fastifyCookie);
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  sign: {
+    expiresIn: '10m',
+  },
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
 });
 app.register(appRoutes);
 
