@@ -4,11 +4,12 @@ import { authenticateController } from './controllers/organization/authenticate.
 import { createPetController } from './controllers/pets/create-pet.controller';
 import { retrievePetController } from './controllers/pets/retrieve-pet.controller';
 import { listPetsByCityController } from './controllers/pets/list-pets-by-city.controller';
+import { verifyJWT } from './middleware/verify-jwt';
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/users', registerController);
 
-  app.post('/pets', createPetController);
+  app.post('/pets', { onRequest: verifyJWT }, createPetController);
   app.get('/pets', listPetsByCityController);
   app.get('/pets/:id', retrievePetController);
 

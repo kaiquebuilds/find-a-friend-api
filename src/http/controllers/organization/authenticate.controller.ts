@@ -16,8 +16,18 @@ export async function authenticateController(
     const data = registerSchema.parse(request.body);
 
     const authenticateUseCase = createAuthenticateUseCase();
-    await authenticateUseCase.execute(data);
-    reply.status(201).send({ token: '1234' });
+    const organization = await authenticateUseCase.execute(data);
+
+    const token = await reply.jwtSign(
+      {},
+      {
+        sign: {
+          sub: organization.id,
+        },
+      },
+    );
+
+    reply.status(201).send({ token });
   } catch (error) {
     if (error instanceof InvalidCredentialsError) {
       return reply.status(401).send({ message: error.message });

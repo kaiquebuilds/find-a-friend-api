@@ -14,22 +14,26 @@ export class PrismaPetsRepository implements PetsRepository {
   }
 
   getAllByCity(city: string, query?: string): Promise<Pet[]> {
-    return prisma.pet.findMany({
-      where: {
-        city,
-        OR: [
-          {
-            name: {
-              contains: query,
+    if (query) {
+      return prisma.pet.findMany({
+        where: {
+          city,
+          OR: [
+            {
+              name: {
+                contains: query,
+              },
             },
-          },
-          {
-            about: {
-              contains: query,
+            {
+              about: {
+                contains: query,
+              },
             },
-          },
-        ],
-      },
-    });
+          ],
+        },
+      });
+    }
+
+    return prisma.pet.findMany({ where: { city } });
   }
 }
